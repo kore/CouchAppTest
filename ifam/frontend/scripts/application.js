@@ -26,8 +26,12 @@ function refreshUserList()
         "/_design/ifam/_view/users?include_docs=true",
         function ( data, textStatus, jqXHR ) {
             $.each( data.rows, function( key, value ) {
-                $( 'ul#users' ).append( "<li>"+ value.doc.name + " &lt;" + value.doc.email + "&gt;</li>" );
+                $( 'ul#users' ).append(
+                    "<li><a data='" + value.id + "'>"+ value.doc.name + " &lt;" + value.doc.email + "&gt;</a></li>"
+                );
             } );
+
+            $( 'ul#users a' ).bind( "click", displayUser );
         }
     );
 }
@@ -50,6 +54,18 @@ function createUser()
     );
 
     return false;
+}
+
+function displayUser( e )
+{
+    var userId = $( e.currentTarget ).attr( "data" );
+
+    myQuery(
+        "/" +  userId,
+        function ( data, textStatus, jqXHR ) {
+            $( '#content' ).html( "<h2>" + data.name + "</h2>" );
+        }
+    );
 }
 
 $( document ).ready( function() {
