@@ -24,6 +24,13 @@ $( document ).ready( function() {
     $.getJSON( "/api/e0d9341282fa85d65d5cdd2238000160", null, function( data, textStatus, jqXHR ) {
         $( "#content h2" ).html( data.title );
     } );
+
+    $( "#createUser" ).bind( "submit", function() {
+
+        // @TODO: Create document in CouchDB
+
+        return false;
+    } );
 } );
 
 // ]]>
@@ -40,6 +47,13 @@ $( document ).ready( function() {
             <li>Read document from CouchDB</li>
             <li>Create document in CouchDB</li>
         </ul>
+        <fieldset>
+            <form id="createUser">
+                <input type="text" name="Name" />
+                <input type="text" name="E-Mail" />
+                <input type="submit" value="Create" />
+            </form>
+        </fieldset>
     </div>
 </body>
 </html>
