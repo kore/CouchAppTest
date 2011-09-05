@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xml:lang="en"
+    lang="en">
+<html:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>IFAM - CouchDB example</title>
+
+    <link rel="Stylesheet" type="text/css" href="/styles/screen.css" media="screen" />
+
+    <link rel="icon" href="/images/favicon.png" type="image/png" />
+
+    <script type="text/javascript" src="/scripts/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript">
+// <![CDATA[
+
+$( document ).ready( function() {
+
+    $.getJSON( "/api/e0d9341282fa85d65d5cdd2238000160", null, function( data, textStatus, jqXHR ) {
+        $( "#content h2" ).html( data.title );
+    } );
+} );
+
+// ]]>
+    </script>
+</head>
+<body>
+    <h1>IFAM example app</h1>
+
+    <div id="content">
+        <h2>Welcome</h2>
+        <p>This is a small example application, which allows you to manage users…</p>
+        <ul>
+            <li>Manipulate DOM tree with JavaScript</li>
+            <li>Read document from CouchDB</li>
+            <li>Create document in CouchDB</li>
+        </ul>
+    </div>
+</body>
+</html>
