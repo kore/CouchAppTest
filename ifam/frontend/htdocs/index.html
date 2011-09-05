@@ -40,11 +40,21 @@ function myQuery( url, callback, data, method )
     } );
 }
 
-$( document ).ready( function() {
+function refreshUserList()
+{
+    $( 'ul#users' ).empty();
+    myQuery(
+        "/_design/ifam/_view/users?include_docs=true",
+        function ( data, textStatus, jqXHR ) {
+            $.each( data.rows, function( key, value ) {
+                $( 'ul#users' ).append( "<li>"+ value.doc.name + " &lt;" + value.doc.email + "&gt;</li>" );
+            } )
+        }
+    );
+}
 
-    $.getJSON( "/api/e0d9341282fa85d65d5cdd2238000160", null, function( data, textStatus, jqXHR ) {
-        $( "#content h2" ).html( data.title );
-    } );
+// @TODO: extract application.js, extract user create function.
+$( document ).ready( function() {
 
     $( "#createUser" ).bind( "submit", function() {
 
@@ -53,6 +63,7 @@ $( document ).ready( function() {
             "/" + $( 'input[name="name"]' ).val(),
             function ( data, textStatus, jqXHR ) {
                 console.log( data );
+                refreshUserList();
             },
             JSON.stringify( {
                 name: $( 'input[name="name"]' ).val(),
@@ -64,6 +75,8 @@ $( document ).ready( function() {
 
         return false;
     } );
+
+    refreshUserList();
 } );
 
 // ]]>
@@ -81,6 +94,9 @@ $( document ).ready( function() {
             <li>Create document in CouchDB</li>
             <li>List documents</li>
             <li>Display a single document</li>
+        </ul>
+        <h3>Users</h3>
+        <ul id="users">
         </ul>
         <fieldset>
             <form id="createUser">
