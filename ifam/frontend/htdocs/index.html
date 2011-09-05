@@ -19,6 +19,27 @@
     <script type="text/javascript">
 // <![CDATA[
 
+function myQuery( url, callback, data, method )
+{
+    var data   = ( data   === undefined ) ? null : data;
+    var method = ( method === undefined ) ? "GET" : method;
+
+    $.ajax( {
+        type: method,
+        url: "/api" + url,
+        data: data,
+        success: callback,
+        error: function( request, textStatus, error )
+            {
+                var result = JSON.parse( request.responseText );
+                console.log( "Error loggin in: " + result.reason );
+                throw( result );
+            },
+        dataType: "json",
+        contentType: "application/json",
+    } );
+}
+
 $( document ).ready( function() {
 
     $.getJSON( "/api/e0d9341282fa85d65d5cdd2238000160", null, function( data, textStatus, jqXHR ) {
@@ -27,7 +48,19 @@ $( document ).ready( function() {
 
     $( "#createUser" ).bind( "submit", function() {
 
-        // @TODO: Create document in CouchDB
+        // function myQuery( url, callback, data, method )
+        myQuery(
+            "/" + $( 'input[name="name"]' ).val(),
+            function ( data, textStatus, jqXHR ) {
+                console.log( data );
+            },
+            JSON.stringify( {
+                name: $( 'input[name="name"]' ).val(),
+                email: $( 'input[name="email"]' ).val(),
+                type: "user"
+            } ),
+            "PUT"
+        );
 
         return false;
     } );
@@ -49,8 +82,8 @@ $( document ).ready( function() {
         </ul>
         <fieldset>
             <form id="createUser">
-                <input type="text" name="Name" />
-                <input type="text" name="E-Mail" />
+                <input type="text" name="name" />
+                <input type="text" name="email" />
                 <input type="submit" value="Create" />
             </form>
         </fieldset>
