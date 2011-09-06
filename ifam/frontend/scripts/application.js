@@ -24,9 +24,11 @@ function showUserList()
     myQuery(
         "/_design/ifam/_view/users?include_docs=true",
         function ( data, textStatus, jqXHR ) {
-            displayTemplate( "home.tpl", data );
+            displayTemplate( "home.tpl", data, function() {
+                $( '#content .users a' ).bind( "click", displayUser );
+            } );
 
-            $( 'ul#users a' ).bind( "click", displayUser );
+            setActive( "displayUsers" );
         }
     );
 }
@@ -58,12 +60,12 @@ function displayUser( e )
     myQuery(
         "/" +  userId,
         function ( data, textStatus, jqXHR ) {
-            $( '#content' ).html( "<h2>" + data.name + "</h2>" );
+            displayTemplate( "user.tpl", data );
         }
     );
 }
 
-function displayTemplate( template, templateData )
+function displayTemplate( template, templateData, success )
 {
     $.get(
         "/templates/" + template,
@@ -72,13 +74,23 @@ function displayTemplate( template, templateData )
             $( "#content" ).empty().append(
                 Mustache.to_html( data, templateData )
             );
+            success();
         }
     );
+}
+
+function setActive( id )
+{
+    $( "ul.navigation li" ).removeClass( "active" );
+    $( "#" + id ).addClass( "active" );
 }
 
 $( document ).ready( function() {
 
     $( "#createUser" ).bind( "submit", createUser );
+
+    $( "#displayUsers" ).bind( "click", showUserList );
+
     showUserList();
 } );
 

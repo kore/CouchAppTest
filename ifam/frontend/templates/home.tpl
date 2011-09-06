@@ -1,9 +1,9 @@
 <h2>Available users</h2>
 
-<ul class="users">
+<ol class="users">
 {{#rows}}
     {{#doc}}
-        <li><a href="#">{{name}}</a> &lt;{{email}}&gt;</li>
+        <li><a href="#" data="{{_id}}">{{name}}</a> &lt;{{email}}&gt;</li>
     {{/doc}}
 {{/rows}}
-</ul>
+</ol>
