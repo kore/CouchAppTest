@@ -26,7 +26,10 @@ function showUserList()
         "/_design/ifam/_view/users?include_docs=true",
         function ( data, textStatus, jqXHR ) {
             displayTemplate( "#content", "home.tpl", data, function() {
-                $( '#content .users a' ).bind( "click", displayUser );
+                $( '#content .users a' ).bind( "click", function( e ) {
+                    var userId = $( e.currentTarget ).attr( "data" );
+                    displayUser( userId );
+                } );
             } );
 
             setActive( "displayUsers" );
@@ -54,14 +57,30 @@ function createUser()
     return false;
 }
 
-function displayUser( e )
+function displayUser( userId )
 {
-    var userId = $( e.currentTarget ).attr( "data" );
-
     myQuery(
-        "/" +  userId,
+        "/" +  userId + "?" + Math.random(),
         function ( data, textStatus, jqXHR ) {
-            displayTemplate( "#content", "user.tpl", data );
+
+            data.attachments = [];
+            $.each( data._attachments, function( key, value ) {
+                value.name = key;
+                data.attachments.push( value );
+            } );
+            console.log( data );
+
+            displayTemplate( "#content", "user_full.tpl", data, function() {
+                $( "#content form" ).bind( "submit", function( e ) {
+
+                    // Use the jquery.form.js function ajaxSubmit, because this functions implements MAGIC to make file uploads possible. Just trigger it an be happy.
+                    $(this).ajaxSubmit( {
+                        url: "/api/" + userId,
+                        success: function () { displayUser( userId ); }
+                    } );
+                    return false;
+                } )
+            } );
         }
     );
 }
