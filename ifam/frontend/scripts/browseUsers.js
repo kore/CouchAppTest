@@ -20,5 +20,16 @@ function showBrowseUsers()
                 } );
             },
         } );
+
+        $( "#content form" ).bind( "submit", function() {
+            myQuery(
+                "/" + $( "#content input[name='user']" ).val(),
+                function ( data, textStatus, jqXHR ) {
+                    displayTemplate( "#user", "user.tpl", data );
+                }
+            );
+
+            return false;
+        } );
     } );
 }
