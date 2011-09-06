@@ -37,18 +37,63 @@ function showUserList()
     );
 }
 
-function createUser()
+function showCreateUser()
 {
-    // function myQuery( url, callback, data, method )
-    myQuery(
-        "/" + $( 'input[name="name"]' ).val(),
+	displayTemplate( "#content", "createUser.tpl" ,null, function(){$( "#content form" ).bind( "submit", createUser )});
+            setActive( "createUser" );
+
+}
+
+function showCreateDocs()
+{
+	displayTemplate( "#content", "doc.tpl" ,null, function(){$( "#content form" ).bind( "submit", createDocuments )});
+            setActive( "createDocument" );
+
+}
+
+function createDocuments()
+{
+    // function myQuery( url, callback, data, method )  
+	myQuery(
+        "/" + Math.random(), 
         function ( data, textStatus, jqXHR ) {
+			
             console.log( data );
             refreshUserList();
         },
         JSON.stringify( {
+            bs: $( 'input[name="bs"]' ).val(),
+            sn: $( 'input[name="sn"]' ).val(),
+			bgn: $( 'input[name="bgn"]' ).val(),
+            type: "doc"
+        } ),
+        "PUT"
+    );
+
+    return false;
+}
+
+function createUser()
+{
+    // function myQuery( url, callback, data, method )
+
+	if( ($('input[name="pass1"]').val()) !== ($('input[name="pass2"]').val()) )
+	{
+		alert("stop");
+		return false;
+	}
+
+    myQuery(
+        "/" + $( 'input[name="name"]' ).val(),
+        function ( data, textStatus, jqXHR ) {
+            console.log( data );
+            //refreshUserList();
+			
+		},
+        JSON.stringify( {
             name: $( 'input[name="name"]' ).val(),
-            email: $( 'input[name="email"]' ).val(),
+            password: $( 'input[name="pass1"]' ).val(),
+			email: $( 'input[name="email"]' ).val(),
             type: "user"
         } ),
         "PUT"
@@ -140,6 +185,10 @@ $( document ).ready( function() {
 
     $( "#displayUsers" ).bind( "click", showUserList );
     $( "#browseUsers" ).bind( "click", showBrowseUsers );
+
+    $( "#createDocument" ).bind( "click", showCreateDocs );
+
+    $( "#createUser" ).bind( "click", showCreateUser );
 
     showUserList();
     checkUserLogin();
