@@ -19,17 +19,12 @@ function myQuery( url, callback, data, method )
     } );
 }
 
-function refreshUserList()
+function showUserList()
 {
-    $( 'ul#users' ).empty();
     myQuery(
         "/_design/ifam/_view/users?include_docs=true",
         function ( data, textStatus, jqXHR ) {
-            $.each( data.rows, function( key, value ) {
-                $( 'ul#users' ).append(
-                    "<li><a data='" + value.id + "'>"+ value.doc.name + " &lt;" + value.doc.email + "&gt;</a></li>"
-                );
-            } );
+            displayTemplate( "home.tpl", data );
 
             $( 'ul#users a' ).bind( "click", displayUser );
         }
@@ -84,7 +79,6 @@ function displayTemplate( template, templateData )
 $( document ).ready( function() {
 
     $( "#createUser" ).bind( "submit", createUser );
-    displayTemplate( "home.tpl", null );
-    refreshUserList();
+    showUserList();
 } );
 
