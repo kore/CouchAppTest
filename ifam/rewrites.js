@@ -8,6 +8,10 @@
        "to": "styles/:style"
    },
    {
+       "from": "/styles/images/:style",
+       "to": "styles/images/:style"
+   },
+   {
        "from": "/scripts/:script",
        "to": "scripts/:script"
    },
