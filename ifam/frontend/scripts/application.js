@@ -68,9 +68,23 @@ function displayUser( e )
     );
 }
 
+function displayTemplate( template, templateData )
+{
+    $.get(
+        "/templates/" + template,
+        null,
+        function ( data, textStatus, jqXHR ) {
+            $( "#content" ).empty().append(
+                Mustache.to_html( data, templateData )
+            );
+        }
+    );
+}
+
 $( document ).ready( function() {
 
     $( "#createUser" ).bind( "submit", createUser );
+    displayTemplate( "home.tpl", null );
     refreshUserList();
 } );
 
