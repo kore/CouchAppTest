@@ -1,7 +1,8 @@
-function myQuery( url, callback, data, method )
+function myQuery( url, callback, data, method, contentType )
 {
     var data   = ( data   === undefined ) ? null : data;
     var method = ( method === undefined ) ? "GET" : method;
+    var contentType = ( contentType === undefined ) ? "application/json" : contentType;
 
     $.ajax( {
         type: method,
@@ -15,7 +16,7 @@ function myQuery( url, callback, data, method )
                 throw( result );
             },
         dataType: "json",
-        contentType: "application/json"
+        contentType: contentType
     } );
 }
 
@@ -24,7 +25,7 @@ function showUserList()
     myQuery(
         "/_design/ifam/_view/users?include_docs=true",
         function ( data, textStatus, jqXHR ) {
-            displayTemplate( "home.tpl", data, function() {
+            displayTemplate( "#content", "home.tpl", data, function() {
                 $( '#content .users a' ).bind( "click", displayUser );
             } );
 
@@ -60,18 +61,18 @@ function displayUser( e )
     myQuery(
         "/" +  userId,
         function ( data, textStatus, jqXHR ) {
-            displayTemplate( "user.tpl", data );
+            displayTemplate( "#content", "user.tpl", data );
         }
     );
 }
 
-function displayTemplate( template, templateData, success )
+function displayTemplate( target, template, templateData, success )
 {
     $.get(
         "/templates/" + template,
         null,
         function ( data, textStatus, jqXHR ) {
-            $( "#content" ).empty().append(
+            $( target ).empty().append(
                 Mustache.to_html( data, templateData )
             );
             success();
@@ -85,6 +86,34 @@ function setActive( id )
     $( "#" + id ).addClass( "active" );
 }
 
+function checkUserLogin()
+{
+    myQuery(
+        "/../_session",
+        function ( data, textStatus, jqXHR ) {
+            if ( !data.userCtx.name ) {
+                displayTemplate( "#login", "login.tpl", null, function() {
+                    $( "#login form" ).bind( "submit", function() {
+                        myQuery(
+                            "/../_session",
+                            checkUserLogin,
+                            {   name: $( "#login input[name='user']" ).val(),
+                                password: $( "#login input[name='pass']" ).val()
+                            },
+                            "POST",
+                            "application/x-www-form-urlencoded"
+                        );
+
+                        return false;
+                    } );
+                } );
+            } else {
+                displayTemplate( "#login", "loggedin.tpl", data.userCtx );
+            }
+        }
+    );
+}
+
 $( document ).ready( function() {
 
     $( "#createUser" ).bind( "submit", createUser );
@@ -92,5 +121,6 @@ $( document ).ready( function() {
     $( "#displayUsers" ).bind( "click", showUserList );
 
     showUserList();
+    checkUserLogin();
 } );
 
