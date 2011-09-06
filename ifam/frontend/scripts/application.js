@@ -64,10 +64,12 @@ function displayUser( userId )
         function ( data, textStatus, jqXHR ) {
 
             data.attachments = [];
-            $.each( data._attachments, function( key, value ) {
-                value.name = key;
-                data.attachments.push( value );
-            } );
+            if ( data._attachments ) {
+                $.each( data._attachments, function( key, value ) {
+                    value.name = key;
+                    data.attachments.push( value );
+                } );
+            }
 
             displayTemplate( "#content", "user_full.tpl", data, function() {
                 $( "#content form" ).bind( "submit", function( e ) {
