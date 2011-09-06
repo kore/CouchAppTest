@@ -68,7 +68,6 @@ function displayUser( userId )
                 value.name = key;
                 data.attachments.push( value );
             } );
-            console.log( data );
 
             displayTemplate( "#content", "user_full.tpl", data, function() {
                 $( "#content form" ).bind( "submit", function( e ) {
