@@ -7,7 +7,6 @@ function showBrowseUsers()
             minLength: 1,
             source: function ( request, response ) {
                 var lastXhr = $.getJSON( '/api/_design/ifam/_view/users?startkey="' + request.term + '"&endkey="' + request.term + '\u9999"', {}, function( data, status, xhr ) {
-                    console.log( data );
                     if ( xhr === lastXhr ) {
                         // Refactor CouchDB return value into valid structure for the UI autocomplete widget
                         var users = [];
