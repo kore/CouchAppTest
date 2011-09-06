@@ -102,6 +102,10 @@ a.button {
     margin-right: .5em;
 }
 
+strong {
+    font-weight: bold;
+}
+
 /**
  * Tweets
  */
