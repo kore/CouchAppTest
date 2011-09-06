@@ -63,8 +63,15 @@ try {
 }
 
 // Find all files to upload
-foreach ( glob( $baseDir . '/frontend/*/*' ) as $file )
+// @TODO: Replace by RecursiveIteratorIterator( RecursiveDirectoryIterator )
+foreach ( array_merge(
+        glob( $baseDir . '/frontend/*' ),
+        glob( $baseDir . '/frontend/*/*' ),
+        glob( $baseDir . '/frontend/*/*/*' )
+    ) as $file )
 {
+    if ( !is_file( $file ) ) continue;
+
     $localName = str_replace( $baseDir . '/frontend/', '', $file );
     $document->_attachments[$localName] = array(
         'type'         => 'base64',
