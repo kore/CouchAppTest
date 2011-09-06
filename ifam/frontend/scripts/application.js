@@ -119,6 +119,7 @@ $( document ).ready( function() {
     $( "#createUser" ).bind( "submit", createUser );
 
     $( "#displayUsers" ).bind( "click", showUserList );
+    $( "#browseUsers" ).bind( "click", showBrowseUsers );
 
     showUserList();
     checkUserLogin();
